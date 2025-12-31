@@ -42,8 +42,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-uint8_t current_btn_state = 1; // 현재 버튼 상태 (Pull-up = 1)
-uint8_t last_btn_state = 1; // 이전 루프 버튼 상태
+uint8_t current_btn_state = 0; // 현재 버튼 상태 (Pull-down = 0)
+uint8_t last_btn_state = 0; // 이전 루프 버튼 상태
 uint32_t last_debounce_time = 0; // 채터링 방지를 위한 시간
 /* USER CODE END PV */
 
@@ -98,9 +98,9 @@ int main(void)
   {
 	  current_btn_state = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13); // 현재 버튼 상태 read
 
-	  if(last_btn_state == 1 && current_btn_state == 0) // 버튼이 눌린 경우
+	  if(last_btn_state == 0 && current_btn_state == 1) // 버튼이 눌린 경우
 	  {
-		  if(HAL_GetTick() - last_debounce_time > 30)
+		  if(HAL_GetTick() - last_debounce_time > 30) // 채터링 방지
 		  {
 			  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5); // LED 토글
 			  last_debounce_time = HAL_GetTick(); // 마지막 동작 시간 체크
@@ -242,3 +242,4 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
+
