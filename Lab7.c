@@ -104,7 +104,7 @@ int main(void)
   {
     uint32_t currentMillis = HAL_GetTick();
 
-    /* [1] 조도 센서 값 읽기 (기존 필터 유지) */
+    /* 1. 조도 센서 값 읽기 */
     uint32_t sum = 0;
     for(int i=0; i<5; i++) {
         HAL_ADC_Start(&hadc1);
@@ -115,8 +115,8 @@ int main(void)
     }
     light_val = sum / 5;
 
-    /* [2] 상태 LED 제어 (개선된 로직) */
-    // 노란색이 한 번 감지되면 손을 치워도 2초간은 노란색을 유지합니다.
+    /* 2. 상태 LED 제어 */
+    // 노란색이 너무 찰나로 인식되어 한 번 감지되면 손을 치워도 2초간은 노란색을 유지하도록
     if (currentMillis - lastStateChange >= 2000) { 
         
         HAL_GPIO_WritePin(StateB_GPIO_Port, StateB_Pin, 0); 
@@ -127,14 +127,14 @@ int main(void)
             HAL_GPIO_WritePin(StateB_GPIO_Port, StateB_Pin, 1);
             red_time = 4000;
         }
-        else if (light_val < 3300) {  // [노랑] 구간을 3300까지 넓게 잡음
+        else if (light_val < 3300) {  // [노랑] 구간을 3300까지 넓게
             HAL_GPIO_WritePin(StateM_GPIO_Port, StateM_Pin, 1);
             red_time = 6000;          // 대기시간 6초
-            lastStateChange = currentMillis; // ★ 노란색이 되면 2초간 상태 고정
+            lastStateChange = currentMillis; // 노란색 고정
         }
         else {                       // [어두움]
             HAL_GPIO_WritePin(StateD_GPIO_Port, StateD_Pin, 1);
-            red_time = 12000;
+            red_time = 10000;
         }
     }
 
@@ -380,4 +380,5 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
+
 
