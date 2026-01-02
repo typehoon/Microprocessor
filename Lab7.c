@@ -43,7 +43,7 @@
 ADC_HandleTypeDef hadc1;
 
 /* USER CODE BEGIN PV */
-extern ADC_HandleTypeDef hadc1; // ADC 제어를 위해 필수
+extern ADC_HandleTypeDef hadc1; // ADC 제어
 uint32_t previousMillis = 0;
 uint8_t step = 0;
 volatile uint32_t light_val = 0;
@@ -380,3 +380,4 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
+
